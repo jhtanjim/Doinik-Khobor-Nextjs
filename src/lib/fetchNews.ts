@@ -1,4 +1,4 @@
-export const fetchNews=async(category:string="",search:string=""):Promise<any[]>=>{
+export const fetchNews=async(category:string="",search:string="")=>{
   try {
     const res=await fetch(`http://localhost:3000/data/db.json/?category=${category}&search=${search}`, );
     
