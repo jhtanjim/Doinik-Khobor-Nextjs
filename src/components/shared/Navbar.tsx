@@ -1,129 +1,116 @@
 "use client";
-import Link from "next/dist/client/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { IoClose, IoMenuSharp } from "react-icons/io5";
-import { Button } from "../ui/button";
+
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import { Switch } from "../ui/switch";
 
+import { ThemeContext } from "@/context/themeConext";
+import { usePathname } from "next/navigation";
+import { useContext } from "react";
+import MobileMenu from "./MobileMenu";
+
+interface ThemeContextType {
+  isDarkMode: boolean;
+  toggleTheme: () => void;
+}
+
 const Navbar = () => {
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+
+  const { isDarkMode, toggleTheme }: any = useContext(ThemeContext);
+
   return (
-    <div className="shadow-md">
-      <div className="container mx-auto flex items-center justify-between p-4">
+    <header
+      className={`py-4 shadow-md ${isDarkMode ? "bg-gray-900 text-white" : ""}`}
+    >
+      <nav className="max-w-7xl mx-auto px-4 flex justify-between items-center sm:px-6 lg:px-8">
         {/* logo */}
-        <Link href="/">
-          <div>
-            <h1 className="text-xl font-bold">DoinikKhobor</h1>
-          </div>
-        </Link>
+        <div className="text-xl font-bold">
+          <Link href="/">Daily News</Link>
+        </div>
 
-        {/* navigation links */}
-        <div className="hidden lg:flex ">
-          <NavigationMenu>
-            <NavigationMenuList>
-              {/* News Link */}
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/news"
-                  className={`link ${
-                    pathname === "/news" ? "text-red-500 font-semibold" : ""
-                  } px-4 py-2 hover:text-red-600`}
-                >
-                  News
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+        {/* desktop menu */}
+        <NavigationMenu className="hidden lg:flex ">
+          <NavigationMenuList>
+            <NavigationMenuItem className="flex space-x-8 items-center">
+              <Link
+                href="/news"
+                className={`${
+                  pathname === "/news" ? "text-red-500 font-semibold" : ""
+                } hover:text-red-500`}
+              >
+                News
+              </Link>
 
-              {/* Services Dropdown */}
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/services"
-                  className={`link ${
-                    pathname === "/services" ? "text-red-500 font-semibold" : ""
-                  } px-4 py-2 hover:text-red-600`}
-                >
-                  Services
-                </NavigationMenuLink>
+              <Link
+                href="/services"
+                className={`${
+                  pathname === "/services" ? "text-red-500 font-semibold" : ""
+                } hover:text-red-500`}
+              >
+                <NavigationMenuTrigger className="dark:bg-gray-900 dark:text-white">
+                  Sevices
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="p-4 space-y-2">
+                  <ul className="text-gray-600 shadow-md rounded-md px-5 py-4 space-y-2">
                     <li>
-                      <NavigationMenuLink href="/services/web">
-                        Web Development
-                      </NavigationMenuLink>
+                      <Link href="/services/web">Web Development</Link>
                     </li>
                     <li>
-                      <NavigationMenuLink href="/services/mobile">
-                        Mobile Development
-                      </NavigationMenuLink>
+                      <Link href="/services/app">Mobile Apps</Link>
                     </li>
                     <li>
-                      <NavigationMenuLink href="/services/seo">
-                        SEO
-                      </NavigationMenuLink>
+                      <Link href="/services/seo">SEO</Link>
                     </li>
                   </ul>
                 </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/about"
-                  className={`link ${
-                    pathname === "/about" ? "text-red-500 font-semibold" : ""
-                  } px-4 py-2 hover:text-red-600`}
-                >
-                  About
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/contact"
-                  className={`link ${
-                    pathname === "/contact  "
-                      ? "text-red-500 font-semibold"
-                      : ""
-                  } px-4 py-2 hover:text-red-600`}
-                >
-                  Contact
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
+              </Link>
 
-        {/* search bar placeholder */}
-        <div className="hidden lg:flex ">
-          {/* Future search bar component */}
+              <Link
+                href="/about"
+                className={`${
+                  pathname === "/about" ? "text-red-500 font-semibold" : ""
+                } hover:text-red-500`}
+              >
+                About
+              </Link>
 
-          <div className="flex items-center space-x-4">
-            <span>Dark Mode</span>
+              <Link
+                href="/contact"
+                className={`${
+                  pathname === "/contact" ? "text-red-500 font-semibold" : ""
+                } hover:text-red-500`}
+              >
+                Contact
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* color switcher and login button */}
+        <div className="hidden lg:flex items-center space-x-4">
+          <div onClick={toggleTheme} className="flex items-center">
+            <span className="mr-2">Dark Mode</span>
             <Switch />
-            <Button variant="default">Login</Button>
           </div>
+          <Button variant="default">Login</Button>
         </div>
-        {/* mobile maenu */}
-        <div className="lg:hidden flex">
-          <Button
-            onClick={toggleMenu}
-            variant="outline"
-            className="px-4 py-2 hover:text-red-600"
-          >
-            {isMenuOpen ? <IoClose size={24} /> : <IoMenuSharp size={24} />}
-          </Button>
-        </div>
-      </div>
-    </div>
+
+        {/* mobile hamburger menu */}
+        <MobileMenu />
+      </nav>
+    </header>
   );
 };
 
 export default Navbar;
+
+// button : add to cart,
+// hooks: useEffect, useState
